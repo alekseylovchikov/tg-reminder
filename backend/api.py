@@ -49,6 +49,7 @@ def create_api(bot_app: Application) -> FastAPI:
             title=body.title,
             description=body.description,
             remind_at=body.remind_at,
+            remind_at_local=body.remind_at_local,
         )
         schedule_reminder(bot_app, row)
         return _row_to_response(row)
@@ -75,6 +76,7 @@ def _row_to_response(row: dict) -> ReminderResponse:
         title=row["title"],
         description=row["description"],
         remind_at=row["remind_at"],
+        remind_at_local=row.get("remind_at_local", ""),
         created_at=row["created_at"],
         is_sent=bool(row["is_sent"]),
     )

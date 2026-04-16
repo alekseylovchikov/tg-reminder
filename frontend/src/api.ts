@@ -28,6 +28,7 @@ export async function createReminder(data: ReminderFormData): Promise<Reminder> 
       title: data.title,
       description: data.description,
       remind_at: new Date(data.remind_at).toISOString(),
+      remind_at_local: data.remind_at,
     }),
   });
   if (!res.ok) {

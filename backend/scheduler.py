@@ -16,13 +16,22 @@ logger = logging.getLogger(__name__)
 RECOVERY_INTERVAL = 60
 
 
-def _format_reminder(row: dict) -> str:
+def _format_time(row: dict) -> str:
+    local = row.get("remind_at_local", "")
+    if local:
+        try:
+            dt = datetime.fromisoformat(local)
+            return dt.strftime("%d.%m.%Y %H:%M")
+        except ValueError:
+            return local
     try:
         dt = datetime.fromisoformat(row["remind_at"])
-        time_str = dt.strftime("%d.%m.%Y %H:%M UTC")
+        return dt.strftime("%d.%m.%Y %H:%M UTC")
     except ValueError:
-        time_str = row["remind_at"]
+        return row["remind_at"]
 
+
+def _format_reminder(row: dict) -> str:
     lines = [
         "🔔 <b>Напоминание!</b>",
         "",
@@ -30,7 +39,7 @@ def _format_reminder(row: dict) -> str:
     ]
     if row.get("description"):
         lines.append(f"\n{row['description']}")
-    lines.append(f"\n⏰ {time_str}")
+    lines.append(f"\n⏰ {_format_time(row)}")
     return "\n".join(lines)
 
 

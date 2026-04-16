@@ -13,12 +13,17 @@ CREATE TABLE IF NOT EXISTS reminders (
     title TEXT NOT NULL,
     description TEXT NOT NULL DEFAULT '',
     remind_at TEXT NOT NULL,
+    remind_at_local TEXT NOT NULL DEFAULT '',
     created_at TEXT NOT NULL,
     is_sent INTEGER NOT NULL DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS idx_reminders_user ON reminders(user_id);
 CREATE INDEX IF NOT EXISTS idx_reminders_due ON reminders(is_sent, remind_at);
 """
+
+_MIGRATIONS = [
+    "ALTER TABLE reminders ADD COLUMN remind_at_local TEXT NOT NULL DEFAULT '';",
+]
 
 
 async def get_db() -> aiosqlite.Connection:
@@ -31,21 +36,27 @@ async def init_db() -> None:
     db = await get_db()
     try:
         await db.executescript(_SCHEMA)
+        for migration in _MIGRATIONS:
+            try:
+                await db.execute(migration)
+            except Exception:
+                pass
         await db.commit()
     finally:
         await db.close()
 
 
 async def create_reminder(
-    user_id: int, title: str, description: str, remind_at: datetime
+    user_id: int, title: str, description: str, remind_at: datetime,
+    remind_at_local: str = "",
 ) -> dict:
     db = await get_db()
     try:
         remind_at_str = remind_at.astimezone(timezone.utc).isoformat()
         created_at_str = datetime.now(timezone.utc).isoformat()
         cursor = await db.execute(
-            "INSERT INTO reminders (user_id, title, description, remind_at, created_at) VALUES (?, ?, ?, ?, ?)",
-            (user_id, title, description, remind_at_str, created_at_str),
+            "INSERT INTO reminders (user_id, title, description, remind_at, remind_at_local, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+            (user_id, title, description, remind_at_str, remind_at_local, created_at_str),
         )
         await db.commit()
         row = await (

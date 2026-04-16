@@ -7,6 +7,7 @@ class ReminderCreate(BaseModel):
     title: str
     description: str = ""
     remind_at: datetime
+    remind_at_local: str = ""
 
     @field_validator("title")
     @classmethod
@@ -32,5 +33,6 @@ class ReminderResponse(BaseModel):
     title: str
     description: str
     remind_at: str
+    remind_at_local: str
     created_at: str
     is_sent: bool

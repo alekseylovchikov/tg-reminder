@@ -1,0 +1,75 @@
+.reminder-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reminder-form h2 {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--hint);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  padding-left: 4px;
+}
+
+input[type="datetime-local"] {
+  color-scheme: light dark;
+}
+
+.form-error {
+  background: rgba(229, 57, 53, 0.1);
+  color: var(--destructive);
+  font-size: 14px;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.btn-primary,
+.btn-secondary {
+  flex: 1;
+  padding: 14px;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 600;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.btn-primary {
+  background: var(--btn);
+  color: var(--btn-text);
+}
+
+.btn-secondary {
+  background: var(--secondary-bg);
+  color: var(--text);
+}
+
+.btn-primary:active,
+.btn-secondary:active {
+  transform: scale(0.97);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+}

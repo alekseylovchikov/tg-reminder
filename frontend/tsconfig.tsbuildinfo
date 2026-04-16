@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/api.ts","./src/main.tsx","./src/telegram.ts","./src/types.ts","./src/components/emptystate.tsx","./src/components/reminderform.tsx","./src/components/reminderlist.tsx"],"version":"5.9.3"}

@@ -1,0 +1,71 @@
+.reminder-list section {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--hint);
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+.reminder-card {
+  background: var(--secondary-bg);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition: opacity 0.2s ease;
+}
+
+.reminder-card.sent {
+  opacity: 0.55;
+}
+
+.reminder-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.reminder-title {
+  font-size: 16px;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.reminder-desc {
+  font-size: 14px;
+  color: var(--hint);
+  margin-top: 4px;
+  word-break: break-word;
+}
+
+.reminder-time {
+  font-size: 13px;
+  color: var(--link);
+  margin-top: 6px;
+}
+
+.delete-btn {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--hint);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.delete-btn:active {
+  background: rgba(229, 57, 53, 0.12);
+  color: var(--destructive);
+}

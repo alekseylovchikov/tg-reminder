@@ -21,12 +21,12 @@ def _format_time(row: dict) -> str:
     if local:
         try:
             dt = datetime.fromisoformat(local)
-            return dt.strftime("%d.%m.%Y %H:%M")
+            return dt.strftime("%d/%m/%Y %H:%M")
         except ValueError:
             return local
     try:
         dt = datetime.fromisoformat(row["remind_at"])
-        return dt.strftime("%d.%m.%Y %H:%M UTC")
+        return dt.strftime("%d/%m/%Y %H:%M UTC")
     except ValueError:
         return row["remind_at"]
 

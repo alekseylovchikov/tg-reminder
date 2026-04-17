@@ -1,42 +1,20 @@
-import { useCallback, useEffect, useState } from "react";
-import type { Reminder } from "./types";
-import { fetchReminders } from "./api";
+import { useState } from "react";
+import { useReminders } from "./hooks/useReminders";
 import ReminderList from "./components/ReminderList";
 import ReminderForm from "./components/ReminderForm";
 import EmptyState from "./components/EmptyState";
 import "./App.css";
 
 export default function App() {
-  const [reminders, setReminders] = useState<Reminder[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: reminders, isLoading, error } = useReminders();
   const [showForm, setShowForm] = useState(false);
 
-  const load = useCallback(async () => {
-    try {
-      const data = await fetchReminders();
-      setReminders(data);
-    } catch (e) {
-      console.error("Failed to load reminders", e);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    load();
-  }, [load]);
-
-  const handleCreated = () => {
-    setShowForm(false);
-    load();
-  };
-
-  const handleDeleted = () => {
-    load();
-  };
-
-  if (loading) {
+  if (isLoading) {
     return <div className="loader">Загрузка…</div>;
+  }
+
+  if (error) {
+    return <div className="loader">Ошибка загрузки</div>;
   }
 
   return (
@@ -46,13 +24,13 @@ export default function App() {
       </header>
 
       {showForm ? (
-        <ReminderForm onCreated={handleCreated} onCancel={() => setShowForm(false)} />
+        <ReminderForm onCreated={() => setShowForm(false)} onCancel={() => setShowForm(false)} />
       ) : (
         <>
-          {reminders.length === 0 ? (
+          {!reminders?.length ? (
             <EmptyState />
           ) : (
-            <ReminderList reminders={reminders} onDeleted={handleDeleted} />
+            <ReminderList reminders={reminders} />
           )}
           <button className="fab" onClick={() => setShowForm(true)} aria-label="Создать напоминание">
             +

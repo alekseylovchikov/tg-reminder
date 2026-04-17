@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ReminderFormData } from "../types";
-import { createReminder } from "../api";
+import { useCreateReminder } from "../hooks/useReminders";
 import "./ReminderForm.css";
 
 interface Props {
@@ -26,36 +26,36 @@ export default function ReminderForm({ onCreated, onCancel }: Props) {
     description: "",
     remind_at: "",
   });
-  const [error, setError] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const [validationError, setValidationError] = useState("");
+  const createMutation = useCreateReminder();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setValidationError("");
 
     if (!form.title.trim()) {
-      setError("Введите название");
+      setValidationError("Введите название");
       return;
     }
     if (!form.remind_at) {
-      setError("Выберите дату и время");
+      setValidationError("Выберите дату и время");
       return;
     }
     if (new Date(form.remind_at) <= new Date()) {
-      setError("Нельзя выбрать прошедшее время");
+      setValidationError("Нельзя выбрать прошедшее время");
       return;
     }
 
-    setSubmitting(true);
-    try {
-      await createReminder(form);
-      onCreated();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка при создании");
-    } finally {
-      setSubmitting(false);
-    }
+    createMutation.mutate(form, { onSuccess: onCreated });
   };
+
+  const error =
+    validationError ||
+    (createMutation.error instanceof Error
+      ? createMutation.error.message
+      : createMutation.error
+        ? "Ошибка при создании"
+        : "");
 
   return (
     <form className="reminder-form" onSubmit={handleSubmit}>
@@ -100,8 +100,8 @@ export default function ReminderForm({ onCreated, onCancel }: Props) {
         <button type="button" className="btn-secondary" onClick={onCancel}>
           Отмена
         </button>
-        <button type="submit" className="btn-primary" disabled={submitting}>
-          {submitting ? "Создание…" : "Создать"}
+        <button type="submit" className="btn-primary" disabled={createMutation.isPending}>
+          {createMutation.isPending ? "Создание…" : "Создать"}
         </button>
       </div>
     </form>

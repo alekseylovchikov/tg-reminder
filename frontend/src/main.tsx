@@ -1,9 +1,12 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Modal from "react-modal";
 import App from "./App";
 import "./index.css";
 import { getTelegram } from "./telegram";
+
+Modal.setAppElement("#root");
 
 const tg = getTelegram();
 tg?.ready();

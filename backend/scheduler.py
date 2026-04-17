@@ -33,9 +33,7 @@ def _format_time(row: dict) -> str:
 
 def _format_reminder(row: dict) -> str:
     lines = [
-        "🔔 <b>Напоминание!</b>",
-        "",
-        f"📌 <b>{row['title']}</b>",
+        f"🔔 <b>{row['title']}</b>",
     ]
     if row.get("description"):
         lines.append(f"\n{row['description']}")

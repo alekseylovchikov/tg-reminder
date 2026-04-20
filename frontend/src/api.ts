@@ -38,7 +38,7 @@ export async function createReminder(data: ReminderFormData): Promise<Reminder> 
   return res.json();
 }
 
-export async function deleteReminder(id: number): Promise<void> {
+export async function deleteReminder(id: string): Promise<void> {
   const res = await fetch(`${BASE}/reminders/${id}`, {
     method: "DELETE",
     headers: headers(),

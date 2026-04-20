@@ -35,7 +35,7 @@ cp .env.example .env
 python3 -m backend.main
 ```
 
-Бот начнёт polling, API-сервер запустится на порту 8080, планировщик будет проверять напоминания каждые 30 секунд.
+Бот начнёт polling, API-сервер запустится на порту 8080, планировщик будет проверять просроченные напоминания каждые 60 секунд.
 
 ### Разработка фронтенда
 
@@ -61,12 +61,55 @@ ngrok http 8080
 
 Полученный URL (например `https://xxxx.ngrok.io`) укажи в `WEBAPP_URL` в `.env`.
 
+## Деплой на Railway
+
+### 1. Подготовка
+
+- Аккаунт на [Railway](https://railway.app)
+- Репозиторий в GitHub/GitLab
+- MongoDB Atlas (бесплатный кластер на [mongodb.com](https://www.mongodb.com/atlas))
+
+### 2. Создание проекта
+
+1. В дашборде Railway нажми **New Project → Deploy from GitHub Repo**
+2. Выбери репозиторий с ботом
+3. Railway автоматически подхватит `railway.json` — билд (Python + Node.js) и старт-команда настроены
+
+### 3. Переменные окружения
+
+В настройках сервиса (**Variables**) добавь:
+
+| Переменная | Значение |
+|---|---|
+| `BOT_TOKEN` | Токен от [@BotFather](https://t.me/BotFather) |
+| `WEBAPP_URL` | `https://<твой-сервис>.up.railway.app` |
+| `MONGO_URI` | Connection string из MongoDB Atlas |
+| `MONGO_DB` | `tg_reminder` (или своё имя базы) |
+
+`PORT` назначается Railway автоматически — бэкенд его подхватывает.
+
+### 4. Домен
+
+1. Перейди в **Settings → Networking → Public Networking**
+2. Нажми **Generate Domain** — получишь URL вида `https://xxx.up.railway.app`
+3. Этот URL используй как `WEBAPP_URL`
+
+### 5. Редеплой
+
+При каждом пуше в основную ветку Railway автоматически пересобирает и деплоит сервис.
+
+---
+
 ## Переменные окружения
 
 | Переменная | Обязательная | По умолчанию | Описание |
 |---|---|---|---|
 | `BOT_TOKEN` | да | — | Токен Telegram-бота |
-| `WEBAPP_URL` | да | — | Публичный URL Mini App |
-| `DB_PATH` | нет | `reminders.db` | Путь к SQLite файлу |
+| `WEBAPP_URL` | да | `http://localhost:5173` | Публичный URL Mini App |
+| `MONGO_URI` | нет | `mongodb://localhost:27017` | URI подключения к MongoDB |
+| `MONGO_DB` | нет | `tg_reminder` | Имя базы данных |
 | `API_PORT` | нет | `8080` | Порт API-сервера |
-| `SCHEDULER_INTERVAL` | нет | `30` | Интервал проверки напоминаний (сек) |
+| `PORT` | нет | — | Порт от PaaS (Railway и др.), приоритетнее `API_PORT` |
+| `PROXY_URL` | нет | — | HTTP-прокси для Telegram API |
+| `CONNECT_TIMEOUT` | нет | `30` | Таймаут подключения (сек) |
+| `READ_TIMEOUT` | нет | `30` | Таймаут чтения (сек) |

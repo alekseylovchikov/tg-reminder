@@ -55,7 +55,7 @@ def create_api(bot_app: Application) -> FastAPI:
         return _row_to_response(row)
 
     @app.delete("/api/reminders/{reminder_id}", status_code=204)
-    async def remove_reminder(reminder_id: int, authorization: str = Header()):
+    async def remove_reminder(reminder_id: str, authorization: str = Header()):
         user_id = _get_user_id(authorization)
         deleted = await db.delete_reminder(reminder_id, user_id)
         if not deleted:
@@ -78,5 +78,5 @@ def _row_to_response(row: dict) -> ReminderResponse:
         remind_at=row["remind_at"],
         remind_at_local=row.get("remind_at_local", ""),
         created_at=row["created_at"],
-        is_sent=bool(row["is_sent"]),
+        is_sent=row["is_sent"] if isinstance(row["is_sent"], bool) else bool(row["is_sent"]),
     )

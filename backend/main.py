@@ -6,7 +6,7 @@ import uvicorn
 from backend.api import create_api
 from backend.bot import create_bot
 from backend.config import API_HOST, API_PORT
-from backend.database import init_db
+from backend.database import init_db, close_db
 from backend.scheduler import setup_scheduler
 
 logging.basicConfig(
@@ -37,6 +37,7 @@ async def main() -> None:
         finally:
             await bot_app.updater.stop()
             await bot_app.stop()
+            await close_db()
             logger.info("Shutdown complete")
 
 

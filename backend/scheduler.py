@@ -54,9 +54,9 @@ async def _send_reminder(context: CallbackContext) -> None:
             parse_mode="HTML",
         )
         await db.mark_sent(reminder_id)
-        logger.info("Sent reminder %d to user %d", reminder_id, user_id)
+        logger.info("Sent reminder %s to user %d", reminder_id, user_id)
     except Exception:
-        logger.exception("Failed to send reminder %d", reminder_id)
+        logger.exception("Failed to send reminder %s", reminder_id)
 
 
 async def _recover_unsent(context: CallbackContext) -> None:
@@ -73,7 +73,7 @@ async def _recover_unsent(context: CallbackContext) -> None:
             data=reminder,
             name=job_name,
         )
-        logger.info("Recovered missed reminder %d", reminder["id"])
+        logger.info("Recovered missed reminder %s", reminder["id"])
 
 
 def schedule_reminder(app: Application, reminder: dict) -> None:
@@ -96,7 +96,7 @@ def schedule_reminder(app: Application, reminder: dict) -> None:
         data=reminder,
         name=job_name,
     )
-    logger.info("Scheduled reminder %d in %.0fs", reminder["id"], delay)
+    logger.info("Scheduled reminder %s in %.0fs", reminder["id"], delay)
 
 
 def setup_scheduler(app: Application) -> None:

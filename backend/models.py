@@ -28,7 +28,7 @@ class ReminderCreate(BaseModel):
 
 
 class ReminderResponse(BaseModel):
-    id: int
+    id: str
     user_id: int
     title: str
     description: str

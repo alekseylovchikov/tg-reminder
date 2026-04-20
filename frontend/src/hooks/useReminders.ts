@@ -22,7 +22,7 @@ export function useCreateReminder() {
 export function useDeleteReminder() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: number) => deleteReminder(id),
+    mutationFn: (id: string) => deleteReminder(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: REMINDERS_KEY }),
   });
 }
